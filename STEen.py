@@ -21,7 +21,7 @@ def set_stlye(name,height,bold=False):
 
 
 #写入数据
-def write_excel(ename, name, IP, EN, Time,TT):
+def write_excel(ename, name, IP, EN, Time,TT,TT2,ACC):
 
     f = xlwt.Workbook()
 
@@ -44,6 +44,8 @@ def write_excel(ename, name, IP, EN, Time,TT):
         column2 = EN.__getitem__(t)
         column3 = Time.__getitem__(t)
         column4 = TT.__getitem__(t)
+        column5 = TT2.__getitem__(t)
+        column6 = ACC.__getitem__(t)
 
         lie = t*25
 
@@ -61,28 +63,39 @@ def write_excel(ename, name, IP, EN, Time,TT):
         for i in range(0, len(column0)):
             # sheet1.write(i + 1, lie + 1, column1[i][0], default)
             for j in range(column1[i].__len__()):
-                sheet1.write(i + 1, lie+1+j*5, column1[i][j], default)
+                sheet1.write(i + 1, lie+1+j*6, column1[i][j], default)
 
         for i in range(0, len(column0)):
             for j in range(column1[i].__len__()):
-                sheet1.write(i + 1, lie+3+j*5, (column1[i][j] - column1[i][0]+0.0)/column1[i][0], default)
+                sheet1.write(i + 1, lie+3+j*6, (column1[i][j] - column1[i][0]+0.0)/column1[i][0], default)
 
                 # 生成第一列
         for i in range(0, len(column0)):
             # sheet1.write(i + 1, lie + 2, column2[i][0], default)
             for j in range(column2[i].__len__()):
-                sheet1.write(i + 1, lie + 2 + j * 5, column2[i][j], default)
+                sheet1.write(i + 1, lie + 2 + j * 6, column2[i][j], default)
 
         for i in range(0, len(column0)):
             for j in range(column2[i].__len__()):
-                sheet1.write(i + 1, lie + 4 + j * 5, (column2[i][0] - column2[i][j]+0.0)/column2[i][0], default)
+                sheet1.write(i + 1, lie + 4 + j * 6, (column2[i][0] - column2[i][j]+0.0)/column2[i][0], default)
+
+        for i in range(0, len(column0)):
+            # sheet1.write(i + 1, lie + 2, column2[i][0], default)
+            for j in range(column3[i].__len__()):
+                sheet1.write(i + 1, lie + 5 + j * 6, column3[i][j], default)
 
         # for i in range(0, len(column0)):
         #     for j in range(column3[i].__len__()):
         #         sheet1.write(i + 1, lie + 5 + j * 5, column2[i][j], default)
 
-        for i in range(0, len(column0)):
-            sheet1.write(i + 1, lie + 5 + 26, column4[i], default)
+        # for i in range(0, len(column0)):
+        #     sheet1.write(i + 1, lie + 5 + 44, column4[i], default)
+        #
+        # for i in range(0, len(column0)):
+        #     sheet1.write(i + 1, lie + 6 + 44, column5[i], default)
+        #
+        # for i in range(0, len(column0)):
+        #     sheet1.write(i + 1, lie + 7 + 44, column6[i], default)
 
 
     sheet1.write(34, 0, "此表格数据是启发式算法测试结果汇总表，对每一个测试用例，启发式算法计算50次，取50次的Latency以及耗时平均值。",
@@ -92,7 +105,7 @@ def write_excel(ename, name, IP, EN, Time,TT):
 
 
 
-path = "C:\\Study\\TestCase\\2021_MEC\\result"
+path = "D:\\study\\TestCase\\2021_MEC\\result"
 
 # xmlSSet = {"Test1_Muti_Pro","Test2_Muti_Pro","acyclic_degree4_Muti_Pro","acyclic_degree6_Muti_Pro","cyclic_degree2_Muti_Pro","cyclic_degree4_Muti_Pro","cyclic_degree6_Muti_Pro","sc_degree2_Muti_Pro","sc_degree4_Muti_Pro","sc_degree6_Muti_Pro"}
 
@@ -118,6 +131,8 @@ for algotithm in algotithms:
         GA_en = []
         GA_IP_T = []
         tT=[]
+        tT2 = []
+        acc = []
 
         for i in range(Test_SSet.__len__()):
 
@@ -133,6 +148,8 @@ for algotithm in algotithms:
             nGA_en = []
             nGA_IP_T = []
             TT=[]
+            TT2 = []
+            ACC = []
 
             j = 1
             for filename in os.listdir(FA_path+"\\"+Test_Set):
@@ -144,7 +161,7 @@ for algotithm in algotithms:
                 ipl = []
                 enl = []
                 tl = []
-                for i in range(6):
+                for i in range(8):
                     ip = (int)(file.readline())
                     en = (int)(file.readline())/1000
                     t = (float)(file.readline())
@@ -154,10 +171,14 @@ for algotithm in algotithms:
                     tl.append(t)
                 # if t < 500:
                 tt = (float)(file.readline())
+                tt2 = (float)(file.readline())
+                acC = (float)(file.readline())
                 nGA_IP.append(ipl)
                 nGA_en.append(enl)
                 nGA_IP_T.append(tl)
                 TT.append(tt)
+                TT2.append(tt2)
+                ACC.append(acC)
                 # a = ((a*j+t)/(j+1))
                 # j+=1
 
@@ -169,10 +190,12 @@ for algotithm in algotithms:
             GA_en.append(nGA_en)
             GA_IP.append(nGA_IP)
             tT.append(TT)
+            tT2.append(TT2)
+            acc.append(ACC)
 
         print(name)
 
-        write_excel(xmlSet+"_HPSStran", name,GA_IP,GA_en,GA_IP_T,tT)
+        write_excel(xmlSet+"_HPSStran", name,GA_IP,GA_en,GA_IP_T,tT,tT2,acc)
 
         lie = lie + 3
 
